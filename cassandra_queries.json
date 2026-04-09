@@ -1,0 +1,91 @@
+{
+  "Q1_livres_informatique": [
+    {
+      "titre": "Clean Code",
+      "auteur": "Martin Robert"
+    },
+    {
+      "titre": "Modern Operating Systems",
+      "auteur": "Tanenbaum Andrew"
+    },
+    {
+      "titre": "Patterns of Enterprise App Arch",
+      "auteur": "Fowler Martin"
+    },
+    {
+      "titre": "Refactoring",
+      "auteur": "Fowler Martin"
+    },
+    {
+      "titre": "The Art of Computer Programming",
+      "auteur": "Knuth Donald"
+    },
+    {
+      "titre": "The Relational Model for DB",
+      "auteur": "Codd Edgar"
+    }
+  ],
+  "Q2_livres_auteur_Fowler": [
+    {
+      "titre": "Patterns of Enterprise App Arch",
+      "annee": 2002,
+      "categorie": "Informatique"
+    },
+    {
+      "titre": "Refactoring",
+      "annee": 1999,
+      "categorie": "Informatique"
+    }
+  ],
+  "Q3_emprunts_en_cours": [
+    {
+      "membre": "Chaabane Fatima",
+      "livre": "Clean Code",
+      "depuis": "2024-03-05"
+    },
+    {
+      "membre": "Mansouri Leila",
+      "livre": "Modern Operating Systems",
+      "depuis": "2024-03-10"
+    },
+    {
+      "membre": "Mejri Sofien",
+      "livre": "The Relational Model for DB",
+      "depuis": "2024-03-15"
+    },
+    {
+      "membre": "Khelifi Nadia",
+      "livre": "L'Étranger",
+      "depuis": "2024-03-18"
+    }
+  ],
+  "Q4_membres_Tunis": [
+    {
+      "nom": "Ben Ali",
+      "prenom": "Mohamed",
+      "email": "m.benali@email.com"
+    },
+    {
+      "nom": "Mansouri",
+      "prenom": "Leila",
+      "email": "l.mansouri@email.com"
+    },
+    {
+      "nom": "Mejri",
+      "prenom": "Sofien",
+      "email": "s.mejri@email.com"
+    }
+  ],
+  "Q5_retards": [
+    {
+      "membre": "Trabelsi Youssef",
+      "livre": "The Relational Model for DB",
+      "prevue": "2024-03-05"
+    },
+    {
+      "membre": "Sassi Amira",
+      "livre": "Clean Code",
+      "prevue": "2024-03-13"
+    }
+  ]
+}

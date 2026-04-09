@@ -1,0 +1,276 @@
+{
+  "C1_compteurs_simulation": [
+    {
+      "titre": "The Art of Computer Programming",
+      "livre_id": 1,
+      "nb_emprunts_total": 2,
+      "nb_consultations": 6
+    },
+    {
+      "titre": "Clean Code",
+      "livre_id": 2,
+      "nb_emprunts_total": 2,
+      "nb_consultations": 6
+    },
+    {
+      "titre": "The Relational Model for DB",
+      "livre_id": 3,
+      "nb_emprunts_total": 2,
+      "nb_consultations": 6
+    },
+    {
+      "titre": "L'Étranger",
+      "livre_id": 4,
+      "nb_emprunts_total": 1,
+      "nb_consultations": 3
+    },
+    {
+      "titre": "Modern Operating Systems",
+      "livre_id": 5,
+      "nb_emprunts_total": 1,
+      "nb_consultations": 3
+    },
+    {
+      "titre": "Refactoring",
+      "livre_id": 6,
+      "nb_emprunts_total": 0,
+      "nb_consultations": 0
+    },
+    {
+      "titre": "Cent ans de solitude",
+      "livre_id": 7,
+      "nb_emprunts_total": 0,
+      "nb_consultations": 0
+    },
+    {
+      "titre": "Ainsi parlait Zarathoustra",
+      "livre_id": 8,
+      "nb_emprunts_total": 0,
+      "nb_consultations": 0
+    },
+    {
+      "titre": "La Chute",
+      "livre_id": 9,
+      "nb_emprunts_total": 0,
+      "nb_consultations": 0
+    },
+    {
+      "titre": "Patterns of Enterprise App Arch",
+      "livre_id": 10,
+      "nb_emprunts_total": 0,
+      "nb_consultations": 0
+    }
+  ],
+  "C3_lwt_reservations": [
+    {
+      "exemplaire_id": 3,
+      "livre": "Clean Code",
+      "statut_lwt": "INSERT IF NOT EXISTS → [applied: false] (déjà emprunté)",
+      "date_dispo_estimee": "2024-03-19"
+    },
+    {
+      "exemplaire_id": 5,
+      "livre": "The Relational Model for DB",
+      "statut_lwt": "INSERT IF NOT EXISTS → [applied: false] (déjà emprunté)",
+      "date_dispo_estimee": "2024-03-05"
+    },
+    {
+      "exemplaire_id": 9,
+      "livre": "Modern Operating Systems",
+      "statut_lwt": "INSERT IF NOT EXISTS → [applied: false] (déjà emprunté)",
+      "date_dispo_estimee": "2024-03-24"
+    }
+  ],
+  "C7_time_series_events": [
+    {
+      "annee_mois": "2024-02",
+      "livre_id": 3,
+      "livre_titre": "The Relational Model for DB",
+      "event_time": "2024-02-20",
+      "event_type": "emprunt",
+      "membre_id": 3
+    },
+    {
+      "annee_mois": "2024-02",
+      "livre_id": 2,
+      "livre_titre": "Clean Code",
+      "event_time": "2024-02-28",
+      "event_type": "emprunt",
+      "membre_id": 6
+    },
+    {
+      "annee_mois": "2024-03",
+      "livre_id": 1,
+      "livre_titre": "The Art of Computer Programming",
+      "event_time": "2024-03-01",
+      "event_type": "emprunt",
+      "membre_id": 1
+    },
+    {
+      "annee_mois": "2024-03",
+      "livre_id": 2,
+      "livre_titre": "Clean Code",
+      "event_time": "2024-03-05",
+      "event_type": "emprunt",
+      "membre_id": 2
+    },
+    {
+      "annee_mois": "2024-03",
+      "livre_id": 5,
+      "livre_titre": "Modern Operating Systems",
+      "event_time": "2024-03-10",
+      "event_type": "emprunt",
+      "membre_id": 4
+    },
+    {
+      "annee_mois": "2024-03",
+      "livre_id": 1,
+      "livre_titre": "The Art of Computer Programming",
+      "event_time": "2024-03-12",
+      "event_type": "emprunt",
+      "membre_id": 5
+    },
+    {
+      "annee_mois": "2024-03",
+      "livre_id": 1,
+      "livre_titre": "The Art of Computer Programming",
+      "event_time": "2024-03-14",
+      "event_type": "retour",
+      "membre_id": 1
+    },
+    {
+      "annee_mois": "2024-03",
+      "livre_id": 3,
+      "livre_titre": "The Relational Model for DB",
+      "event_time": "2024-03-15",
+      "event_type": "emprunt",
+      "membre_id": 7
+    },
+    {
+      "annee_mois": "2024-03",
+      "livre_id": 4,
+      "livre_titre": "L'Étranger",
+      "event_time": "2024-03-18",
+      "event_type": "emprunt",
+      "membre_id": 8
+    },
+    {
+      "annee_mois": "2024-03",
+      "livre_id": 1,
+      "livre_titre": "The Art of Computer Programming",
+      "event_time": "2024-03-25",
+      "event_type": "retour",
+      "membre_id": 5
+    }
+  ],
+  "C9_bucketing_membres": [
+    {
+      "ville": "Bizerte",
+      "bucket": 1,
+      "membre_id": 5,
+      "nom": "Brahmi",
+      "prenom": "Karim"
+    },
+    {
+      "ville": "Gabes",
+      "bucket": 0,
+      "membre_id": 8,
+      "nom": "Khelifi",
+      "prenom": "Nadia"
+    },
+    {
+      "ville": "Nabeul",
+      "bucket": 2,
+      "membre_id": 6,
+      "nom": "Sassi",
+      "prenom": "Amira"
+    },
+    {
+      "ville": "Sfax",
+      "bucket": 2,
+      "membre_id": 2,
+      "nom": "Chaabane",
+      "prenom": "Fatima"
+    },
+    {
+      "ville": "Sousse",
+      "bucket": 3,
+      "membre_id": 3,
+      "nom": "Trabelsi",
+      "prenom": "Youssef"
+    },
+    {
+      "ville": "Tunis",
+      "bucket": 0,
+      "membre_id": 4,
+      "nom": "Mansouri",
+      "prenom": "Leila"
+    },
+    {
+      "ville": "Tunis",
+      "bucket": 1,
+      "membre_id": 1,
+      "nom": "Ben Ali",
+      "prenom": "Mohamed"
+    },
+    {
+      "ville": "Tunis",
+      "bucket": 3,
+      "membre_id": 7,
+      "nom": "Mejri",
+      "prenom": "Sofien"
+    }
+  ],
+  "C9_analyse_partitions": {
+    "avant_bucketing": {
+      "Tunis": 3,
+      "Sfax": 1,
+      "Sousse": 1,
+      "Bizerte": 1,
+      "Nabeul": 1,
+      "Gabes": 1
+    },
+    "apres_bucketing": {
+      "Gabes_bucket_0": 1,
+      "Tunis_bucket_0": 1,
+      "Tunis_bucket_1": 1,
+      "Tunis_bucket_3": 1,
+      "Sfax_bucket_2": 1,
+      "Bizerte_bucket_1": 1,
+      "Nabeul_bucket_2": 1,
+      "Sousse_bucket_3": 1
+    }
+  },
+  "C10_consistency_recommendations": [
+    {
+      "operation": "Recherche catalogue livres",
+      "consistency": "ONE",
+      "raison": "Lecture non critique, haute dispo"
+    },
+    {
+      "operation": "Consultation disponibilité",
+      "consistency": "LOCAL_QUORUM",
+      "raison": "Données fréquemment modifiées"
+    },
+    {
+      "operation": "Enregistrement emprunt",
+      "consistency": "QUORUM",
+      "raison": "Écriture importante, cohérence nécessaire"
+    },
+    {
+      "operation": "Mise à jour disponibilité",
+      "consistency": "QUORUM",
+      "raison": "Éviter double réservation"
+    },
+    {
+      "operation": "Création compte membre",
+      "consistency": "ALL",
+      "raison": "Unicité email obligatoire"
+    },
+    {
+      "operation": "Lecture statistiques/rapports",
+      "consistency": "ONE",
+      "raison": "Légère inconsistance acceptable"
+    }
+  ]
+}

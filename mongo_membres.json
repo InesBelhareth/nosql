@@ -1,0 +1,210 @@
+[
+  {
+    "_id": "membre_001",
+    "nom": "Ben Ali",
+    "prenom": "Mohamed",
+    "email": "m.benali@email.com",
+    "telephone": "+216 71 000 001",
+    "adresse": {
+      "rue": "Rue Habib Bourguiba 12",
+      "ville": "Tunis"
+    },
+    "date_inscription": "2022-01-15",
+    "emprunts": [
+      {
+        "emprunt_id": 1,
+        "livre_titre": "The Art of Computer Programming",
+        "livre_isbn": "978-0-201-03801-0",
+        "date_emprunt": "2024-03-01",
+        "date_retour_prevue": "2024-03-15",
+        "date_retour_reelle": "2024-03-14",
+        "statut": "rendu"
+      }
+    ],
+    "nb_emprunts_total": 1,
+    "emprunts_en_cours": 0,
+    "emprunts_retard": 0
+  },
+  {
+    "_id": "membre_002",
+    "nom": "Chaabane",
+    "prenom": "Fatima",
+    "email": "f.chaabane@email.com",
+    "telephone": "+216 71 000 002",
+    "adresse": {
+      "rue": "Avenue Farhat Hached 5",
+      "ville": "Sfax"
+    },
+    "date_inscription": "2022-03-20",
+    "emprunts": [
+      {
+        "emprunt_id": 2,
+        "livre_titre": "Clean Code",
+        "livre_isbn": "978-0-13-235088-4",
+        "date_emprunt": "2024-03-05",
+        "date_retour_prevue": "2024-03-19",
+        "date_retour_reelle": null,
+        "statut": "en_cours"
+      }
+    ],
+    "nb_emprunts_total": 1,
+    "emprunts_en_cours": 1,
+    "emprunts_retard": 0
+  },
+  {
+    "_id": "membre_003",
+    "nom": "Trabelsi",
+    "prenom": "Youssef",
+    "email": "y.trabelsi@email.com",
+    "telephone": "+216 71 000 003",
+    "adresse": {
+      "rue": "Rue de la Liberté 8",
+      "ville": "Sousse"
+    },
+    "date_inscription": "2022-06-10",
+    "emprunts": [
+      {
+        "emprunt_id": 3,
+        "livre_titre": "The Relational Model for DB",
+        "livre_isbn": "978-0-201-14192-4",
+        "date_emprunt": "2024-02-20",
+        "date_retour_prevue": "2024-03-05",
+        "date_retour_reelle": null,
+        "statut": "retard"
+      }
+    ],
+    "nb_emprunts_total": 1,
+    "emprunts_en_cours": 0,
+    "emprunts_retard": 1
+  },
+  {
+    "_id": "membre_004",
+    "nom": "Mansouri",
+    "prenom": "Leila",
+    "email": "l.mansouri@email.com",
+    "telephone": "+216 71 000 004",
+    "adresse": {
+      "rue": "Avenue de Carthage 22",
+      "ville": "Tunis"
+    },
+    "date_inscription": "2023-01-05",
+    "emprunts": [
+      {
+        "emprunt_id": 4,
+        "livre_titre": "Modern Operating Systems",
+        "livre_isbn": "978-0-13-359162-0",
+        "date_emprunt": "2024-03-10",
+        "date_retour_prevue": "2024-03-24",
+        "date_retour_reelle": null,
+        "statut": "en_cours"
+      }
+    ],
+    "nb_emprunts_total": 1,
+    "emprunts_en_cours": 1,
+    "emprunts_retard": 0
+  },
+  {
+    "_id": "membre_005",
+    "nom": "Brahmi",
+    "prenom": "Karim",
+    "email": "k.brahmi@email.com",
+    "telephone": "+216 71 000 005",
+    "adresse": {
+      "rue": "Rue Ibn Khaldoun 3",
+      "ville": "Bizerte"
+    },
+    "date_inscription": "2023-04-18",
+    "emprunts": [
+      {
+        "emprunt_id": 5,
+        "livre_titre": "The Art of Computer Programming",
+        "livre_isbn": "978-0-201-03801-0",
+        "date_emprunt": "2024-03-12",
+        "date_retour_prevue": "2024-03-26",
+        "date_retour_reelle": "2024-03-25",
+        "statut": "rendu"
+      }
+    ],
+    "nb_emprunts_total": 1,
+    "emprunts_en_cours": 0,
+    "emprunts_retard": 0
+  },
+  {
+    "_id": "membre_006",
+    "nom": "Sassi",
+    "prenom": "Amira",
+    "email": "a.sassi@email.com",
+    "telephone": "+216 71 000 006",
+    "adresse": {
+      "rue": "Boulevard de l'Indep 7",
+      "ville": "Nabeul"
+    },
+    "date_inscription": "2023-07-22",
+    "emprunts": [
+      {
+        "emprunt_id": 6,
+        "livre_titre": "Clean Code",
+        "livre_isbn": "978-0-13-235088-4",
+        "date_emprunt": "2024-02-28",
+        "date_retour_prevue": "2024-03-13",
+        "date_retour_reelle": null,
+        "statut": "retard"
+      }
+    ],
+    "nb_emprunts_total": 1,
+    "emprunts_en_cours": 0,
+    "emprunts_retard": 1
+  },
+  {
+    "_id": "membre_007",
+    "nom": "Mejri",
+    "prenom": "Sofien",
+    "email": "s.mejri@email.com",
+    "telephone": "+216 71 000 007",
+    "adresse": {
+      "rue": "Rue des Roses 15",
+      "ville": "Tunis"
+    },
+    "date_inscription": "2023-09-30",
+    "emprunts": [
+      {
+        "emprunt_id": 7,
+        "livre_titre": "The Relational Model for DB",
+        "livre_isbn": "978-0-201-14192-4",
+        "date_emprunt": "2024-03-15",
+        "date_retour_prevue": "2024-03-29",
+        "date_retour_reelle": null,
+        "statut": "en_cours"
+      }
+    ],
+    "nb_emprunts_total": 1,
+    "emprunts_en_cours": 1,
+    "emprunts_retard": 0
+  },
+  {
+    "_id": "membre_008",
+    "nom": "Khelifi",
+    "prenom": "Nadia",
+    "email": "n.khelifi@email.com",
+    "telephone": "+216 71 000 008",
+    "adresse": {
+      "rue": "Avenue de l'Armée 18",
+      "ville": "Gabes"
+    },
+    "date_inscription": "2024-01-12",
+    "emprunts": [
+      {
+        "emprunt_id": 8,
+        "livre_titre": "L'Étranger",
+        "livre_isbn": "978-2-07-036024-5",
+        "date_emprunt": "2024-03-18",
+        "date_retour_prevue": "2024-04-01",
+        "date_retour_reelle": null,
+        "statut": "en_cours"
+      }
+    ],
+    "nb_emprunts_total": 1,
+    "emprunts_en_cours": 1,
+    "emprunts_retard": 0
+  }
+]

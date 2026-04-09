@@ -1,0 +1,414 @@
+[
+  {
+    "_id": "livre_001",
+    "titre": "The Art of Computer Programming",
+    "isbn": "978-0-201-03801-0",
+    "annee_pub": 1968,
+    "editeur": "Addison-Wesley",
+    "prix": 89.99,
+    "auteur": {
+      "nom": "Knuth",
+      "prenom": "Donald",
+      "nationalite": "Américain",
+      "date_naissance": "1938-01-10"
+    },
+    "categorie": {
+      "nom": "Informatique",
+      "description": "Livres sur la programmation et les systèmes"
+    },
+    "exemplaires": [
+      {
+        "exemplaire_id": 1,
+        "etat": "bon",
+        "disponible": false,
+        "historique_emprunts": [
+          {
+            "emprunt_id": 1,
+            "membre_id": 1,
+            "date_emprunt": "2024-03-01",
+            "date_retour_prevue": "2024-03-15",
+            "date_retour_reelle": "2024-03-14",
+            "statut": "rendu"
+          }
+        ]
+      },
+      {
+        "exemplaire_id": 2,
+        "etat": "bon",
+        "disponible": true,
+        "historique_emprunts": [
+          {
+            "emprunt_id": 5,
+            "membre_id": 5,
+            "date_emprunt": "2024-03-12",
+            "date_retour_prevue": "2024-03-26",
+            "date_retour_reelle": "2024-03-25",
+            "statut": "rendu"
+          }
+        ]
+      }
+    ],
+    "nb_exemplaires": 2,
+    "nb_disponibles": 1
+  },
+  {
+    "_id": "livre_002",
+    "titre": "Clean Code",
+    "isbn": "978-0-13-235088-4",
+    "annee_pub": 2008,
+    "editeur": "Prentice Hall",
+    "prix": 45.0,
+    "auteur": {
+      "nom": "Martin",
+      "prenom": "Robert",
+      "nationalite": "Américain",
+      "date_naissance": "1952-12-05"
+    },
+    "categorie": {
+      "nom": "Informatique",
+      "description": "Livres sur la programmation et les systèmes"
+    },
+    "exemplaires": [
+      {
+        "exemplaire_id": 3,
+        "etat": "use",
+        "disponible": false,
+        "historique_emprunts": [
+          {
+            "emprunt_id": 2,
+            "membre_id": 2,
+            "date_emprunt": "2024-03-05",
+            "date_retour_prevue": "2024-03-19",
+            "date_retour_reelle": null,
+            "statut": "en_cours"
+          }
+        ]
+      },
+      {
+        "exemplaire_id": 4,
+        "etat": "bon",
+        "disponible": true,
+        "historique_emprunts": [
+          {
+            "emprunt_id": 6,
+            "membre_id": 6,
+            "date_emprunt": "2024-02-28",
+            "date_retour_prevue": "2024-03-13",
+            "date_retour_reelle": null,
+            "statut": "retard"
+          }
+        ]
+      }
+    ],
+    "nb_exemplaires": 2,
+    "nb_disponibles": 1
+  },
+  {
+    "_id": "livre_003",
+    "titre": "The Relational Model for DB",
+    "isbn": "978-0-201-14192-4",
+    "annee_pub": 1990,
+    "editeur": "Addison-Wesley",
+    "prix": 55.0,
+    "auteur": {
+      "nom": "Codd",
+      "prenom": "Edgar",
+      "nationalite": "Britannique",
+      "date_naissance": "1923-08-19"
+    },
+    "categorie": {
+      "nom": "Informatique",
+      "description": "Livres sur la programmation et les systèmes"
+    },
+    "exemplaires": [
+      {
+        "exemplaire_id": 5,
+        "etat": "bon",
+        "disponible": false,
+        "historique_emprunts": [
+          {
+            "emprunt_id": 3,
+            "membre_id": 3,
+            "date_emprunt": "2024-02-20",
+            "date_retour_prevue": "2024-03-05",
+            "date_retour_reelle": null,
+            "statut": "retard"
+          }
+        ]
+      },
+      {
+        "exemplaire_id": 6,
+        "etat": "bon",
+        "disponible": true,
+        "historique_emprunts": [
+          {
+            "emprunt_id": 7,
+            "membre_id": 7,
+            "date_emprunt": "2024-03-15",
+            "date_retour_prevue": "2024-03-29",
+            "date_retour_reelle": null,
+            "statut": "en_cours"
+          }
+        ]
+      }
+    ],
+    "nb_exemplaires": 2,
+    "nb_disponibles": 1
+  },
+  {
+    "_id": "livre_004",
+    "titre": "L'Étranger",
+    "isbn": "978-2-07-036024-5",
+    "annee_pub": 1942,
+    "editeur": "Gallimard",
+    "prix": 12.0,
+    "auteur": {
+      "nom": "Camus",
+      "prenom": "Albert",
+      "nationalite": "Français",
+      "date_naissance": "1913-11-07"
+    },
+    "categorie": {
+      "nom": "Littérature",
+      "description": "Romans, nouvelles, poésie"
+    },
+    "exemplaires": [
+      {
+        "exemplaire_id": 7,
+        "etat": "bon",
+        "disponible": true,
+        "historique_emprunts": []
+      },
+      {
+        "exemplaire_id": 8,
+        "etat": "bon",
+        "disponible": true,
+        "historique_emprunts": [
+          {
+            "emprunt_id": 8,
+            "membre_id": 8,
+            "date_emprunt": "2024-03-18",
+            "date_retour_prevue": "2024-04-01",
+            "date_retour_reelle": null,
+            "statut": "en_cours"
+          }
+        ]
+      }
+    ],
+    "nb_exemplaires": 2,
+    "nb_disponibles": 2
+  },
+  {
+    "_id": "livre_005",
+    "titre": "Modern Operating Systems",
+    "isbn": "978-0-13-359162-0",
+    "annee_pub": 2014,
+    "editeur": "Pearson",
+    "prix": 70.0,
+    "auteur": {
+      "nom": "Tanenbaum",
+      "prenom": "Andrew",
+      "nationalite": "Américain",
+      "date_naissance": "1944-03-16"
+    },
+    "categorie": {
+      "nom": "Informatique",
+      "description": "Livres sur la programmation et les systèmes"
+    },
+    "exemplaires": [
+      {
+        "exemplaire_id": 9,
+        "etat": "bon",
+        "disponible": false,
+        "historique_emprunts": [
+          {
+            "emprunt_id": 4,
+            "membre_id": 4,
+            "date_emprunt": "2024-03-10",
+            "date_retour_prevue": "2024-03-24",
+            "date_retour_reelle": null,
+            "statut": "en_cours"
+          }
+        ]
+      },
+      {
+        "exemplaire_id": 10,
+        "etat": "bon",
+        "disponible": true,
+        "historique_emprunts": []
+      }
+    ],
+    "nb_exemplaires": 2,
+    "nb_disponibles": 1
+  },
+  {
+    "_id": "livre_006",
+    "titre": "Refactoring",
+    "isbn": "978-0-13-468599-1",
+    "annee_pub": 1999,
+    "editeur": "Addison-Wesley",
+    "prix": 50.0,
+    "auteur": {
+      "nom": "Fowler",
+      "prenom": "Martin",
+      "nationalite": "Britannique",
+      "date_naissance": "1963-06-18"
+    },
+    "categorie": {
+      "nom": "Informatique",
+      "description": "Livres sur la programmation et les systèmes"
+    },
+    "exemplaires": [
+      {
+        "exemplaire_id": 11,
+        "etat": "bon",
+        "disponible": true,
+        "historique_emprunts": []
+      },
+      {
+        "exemplaire_id": 12,
+        "etat": "bon",
+        "disponible": true,
+        "historique_emprunts": []
+      }
+    ],
+    "nb_exemplaires": 2,
+    "nb_disponibles": 2
+  },
+  {
+    "_id": "livre_007",
+    "titre": "Cent ans de solitude",
+    "isbn": "978-2-07-036088-7",
+    "annee_pub": 1967,
+    "editeur": "Gallimard",
+    "prix": 14.0,
+    "auteur": {
+      "nom": "García M.",
+      "prenom": "Gabriel",
+      "nationalite": "Colombien",
+      "date_naissance": "1927-03-06"
+    },
+    "categorie": {
+      "nom": "Littérature",
+      "description": "Romans, nouvelles, poésie"
+    },
+    "exemplaires": [
+      {
+        "exemplaire_id": 13,
+        "etat": "bon",
+        "disponible": true,
+        "historique_emprunts": []
+      },
+      {
+        "exemplaire_id": 14,
+        "etat": "bon",
+        "disponible": true,
+        "historique_emprunts": []
+      }
+    ],
+    "nb_exemplaires": 2,
+    "nb_disponibles": 2
+  },
+  {
+    "_id": "livre_008",
+    "titre": "Ainsi parlait Zarathoustra",
+    "isbn": "978-2-07-041217-5",
+    "annee_pub": 1885,
+    "editeur": "Gallimard",
+    "prix": 11.0,
+    "auteur": {
+      "nom": "Nietzsche",
+      "prenom": "Friedrich",
+      "nationalite": "Allemand",
+      "date_naissance": "1844-10-15"
+    },
+    "categorie": {
+      "nom": "Philosophie",
+      "description": "Pensée critique et philosophie"
+    },
+    "exemplaires": [
+      {
+        "exemplaire_id": 15,
+        "etat": "bon",
+        "disponible": true,
+        "historique_emprunts": []
+      },
+      {
+        "exemplaire_id": 16,
+        "etat": "bon",
+        "disponible": true,
+        "historique_emprunts": []
+      }
+    ],
+    "nb_exemplaires": 2,
+    "nb_disponibles": 2
+  },
+  {
+    "_id": "livre_009",
+    "titre": "La Chute",
+    "isbn": "978-2-07-036026-9",
+    "annee_pub": 1956,
+    "editeur": "Gallimard",
+    "prix": 10.0,
+    "auteur": {
+      "nom": "Camus",
+      "prenom": "Albert",
+      "nationalite": "Français",
+      "date_naissance": "1913-11-07"
+    },
+    "categorie": {
+      "nom": "Littérature",
+      "description": "Romans, nouvelles, poésie"
+    },
+    "exemplaires": [
+      {
+        "exemplaire_id": 17,
+        "etat": "bon",
+        "disponible": true,
+        "historique_emprunts": []
+      },
+      {
+        "exemplaire_id": 18,
+        "etat": "bon",
+        "disponible": true,
+        "historique_emprunts": []
+      }
+    ],
+    "nb_exemplaires": 2,
+    "nb_disponibles": 2
+  },
+  {
+    "_id": "livre_010",
+    "titre": "Patterns of Enterprise App Arch",
+    "isbn": "978-0-32-112521-7",
+    "annee_pub": 2002,
+    "editeur": "Addison-Wesley",
+    "prix": 60.0,
+    "auteur": {
+      "nom": "Fowler",
+      "prenom": "Martin",
+      "nationalite": "Britannique",
+      "date_naissance": "1963-06-18"
+    },
+    "categorie": {
+      "nom": "Informatique",
+      "description": "Livres sur la programmation et les systèmes"
+    },
+    "exemplaires": [
+      {
+        "exemplaire_id": 19,
+        "etat": "bon",
+        "disponible": true,
+        "historique_emprunts": []
+      },
+      {
+        "exemplaire_id": 20,
+        "etat": "bon",
+        "disponible": true,
+        "historique_emprunts": []
+      }
+    ],
+    "nb_exemplaires": 2,
+    "nb_disponibles": 2
+  }
+]
