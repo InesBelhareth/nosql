@@ -231,14 +231,14 @@
       "Gabes": 1
     },
     "apres_bucketing": {
-      "Gabes_bucket_0": 1,
       "Tunis_bucket_0": 1,
       "Tunis_bucket_1": 1,
       "Tunis_bucket_3": 1,
+      "Sousse_bucket_3": 1,
       "Sfax_bucket_2": 1,
       "Bizerte_bucket_1": 1,
       "Nabeul_bucket_2": 1,
-      "Sousse_bucket_3": 1
+      "Gabes_bucket_0": 1
     }
   },
   "C10_consistency_recommendations": [

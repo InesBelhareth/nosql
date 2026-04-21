@@ -1,0 +1,230 @@
+{
+  "G1_livres_informatique": [
+    {
+      "titre": "Clean Code",
+      "auteur": "Martin Robert",
+      "prix": 45.0
+    },
+    {
+      "titre": "Modern Operating Systems",
+      "auteur": "Tanenbaum Andrew",
+      "prix": 70.0
+    },
+    {
+      "titre": "Patterns of Enterprise App Arch",
+      "auteur": "Fowler Martin",
+      "prix": 60.0
+    },
+    {
+      "titre": "Refactoring",
+      "auteur": "Fowler Martin",
+      "prix": 50.0
+    },
+    {
+      "titre": "The Art of Computer Programming",
+      "auteur": "Knuth Donald",
+      "prix": 89.99
+    },
+    {
+      "titre": "The Relational Model for DB",
+      "auteur": "Codd Edgar",
+      "prix": 55.0
+    }
+  ],
+  "G2_livres_fowler": [
+    {
+      "titre": "Refactoring",
+      "annee": 1999,
+      "categorie": "Informatique"
+    },
+    {
+      "titre": "Patterns of Enterprise App Arch",
+      "annee": 2002,
+      "categorie": "Informatique"
+    }
+  ],
+  "G3_emprunts_en_cours": [
+    {
+      "membre": "Youssef Trabelsi",
+      "livre": "The Relational Model for DB",
+      "depuis": "2024-02-20",
+      "statut": "retard"
+    },
+    {
+      "membre": "Amira Sassi",
+      "livre": "Clean Code",
+      "depuis": "2024-02-28",
+      "statut": "retard"
+    },
+    {
+      "membre": "Fatima Chaabane",
+      "livre": "Clean Code",
+      "depuis": "2024-03-05",
+      "statut": "en_cours"
+    },
+    {
+      "membre": "Leila Mansouri",
+      "livre": "Modern Operating Systems",
+      "depuis": "2024-03-10",
+      "statut": "en_cours"
+    },
+    {
+      "membre": "Sofien Mejri",
+      "livre": "The Relational Model for DB",
+      "depuis": "2024-03-15",
+      "statut": "en_cours"
+    },
+    {
+      "membre": "Nadia Khelifi",
+      "livre": "L'Étranger",
+      "depuis": "2024-03-18",
+      "statut": "en_cours"
+    }
+  ],
+  "G5_retards": [
+    {
+      "membre": "Youssef Trabelsi",
+      "livre": "The Relational Model for DB",
+      "prevue": "2024-03-05",
+      "contact": "y.trabelsi@email.com"
+    },
+    {
+      "membre": "Amira Sassi",
+      "livre": "Clean Code",
+      "prevue": "2024-03-13",
+      "contact": "a.sassi@email.com"
+    }
+  ],
+  "G6_recommandations": [],
+  "G8_centralite": [
+    {
+      "titre": "The Art of Computer Programming",
+      "nb_exemplaires": 2,
+      "nb_emprunts": 2,
+      "taux_utilisation": 1.0
+    },
+    {
+      "titre": "Clean Code",
+      "nb_exemplaires": 2,
+      "nb_emprunts": 2,
+      "taux_utilisation": 1.0
+    },
+    {
+      "titre": "The Relational Model for DB",
+      "nb_exemplaires": 2,
+      "nb_emprunts": 2,
+      "taux_utilisation": 1.0
+    },
+    {
+      "titre": "L'Étranger",
+      "nb_exemplaires": 2,
+      "nb_emprunts": 1,
+      "taux_utilisation": 0.5
+    },
+    {
+      "titre": "Modern Operating Systems",
+      "nb_exemplaires": 2,
+      "nb_emprunts": 1,
+      "taux_utilisation": 0.5
+    },
+    {
+      "titre": "Refactoring",
+      "nb_exemplaires": 2,
+      "nb_emprunts": 0,
+      "taux_utilisation": 0.0
+    },
+    {
+      "titre": "Cent ans de solitude",
+      "nb_exemplaires": 2,
+      "nb_emprunts": 0,
+      "taux_utilisation": 0.0
+    },
+    {
+      "titre": "Ainsi parlait Zarathoustra",
+      "nb_exemplaires": 2,
+      "nb_emprunts": 0,
+      "taux_utilisation": 0.0
+    },
+    {
+      "titre": "La Chute",
+      "nb_exemplaires": 2,
+      "nb_emprunts": 0,
+      "taux_utilisation": 0.0
+    },
+    {
+      "titre": "Patterns of Enterprise App Arch",
+      "nb_exemplaires": 2,
+      "nb_emprunts": 0,
+      "taux_utilisation": 0.0
+    }
+  ],
+  "G9_membres_connectes": [
+    {
+      "membre1": "Mohamed Ben Ali",
+      "membre2": "Karim Brahmi",
+      "livres_communs": [
+        "The Art of Computer Programming"
+      ],
+      "nb_livres_communs": 1
+    },
+    {
+      "membre1": "Fatima Chaabane",
+      "membre2": "Amira Sassi",
+      "livres_communs": [
+        "Clean Code"
+      ],
+      "nb_livres_communs": 1
+    },
+    {
+      "membre1": "Youssef Trabelsi",
+      "membre2": "Sofien Mejri",
+      "livres_communs": [
+        "The Relational Model for DB"
+      ],
+      "nb_livres_communs": 1
+    }
+  ],
+  "G10_stats_categories": [
+    {
+      "categorie": "Informatique",
+      "nb_livres": 6,
+      "nb_exemplaires": 12,
+      "nb_emprunts": 7,
+      "prix_moyen": 61.66,
+      "valeur_stock": 739.98
+    },
+    {
+      "categorie": "Littérature",
+      "nb_livres": 3,
+      "nb_exemplaires": 6,
+      "nb_emprunts": 1,
+      "prix_moyen": 12.0,
+      "valeur_stock": 72.0
+    },
+    {
+      "categorie": "Philosophie",
+      "nb_livres": 1,
+      "nb_exemplaires": 2,
+      "nb_emprunts": 0,
+      "prix_moyen": 11.0,
+      "valeur_stock": 22.0
+    }
+  ],
+  "graph_model_stats": {
+    "nb_noeuds": {
+      "Livre": 10,
+      "Auteur": 8,
+      "Membre": 8,
+      "Categorie": 5,
+      "Exemplaire": 20,
+      "TOTAL": 51
+    },
+    "nb_relations": {
+      "A_ECRIT": 10,
+      "APPARTIENT_A": 10,
+      "A_EXEMPLAIRE": 20,
+      "A_EMPRUNTE": 8,
+      "TOTAL": 48
+    }
+  }
+}

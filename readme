@@ -2,4 +2,6 @@ execution:
 python 01_base_relationnelle.py
 python 02_migration_mongodb.py
 python 03_migration_cassandra.py
+python 04_migration_neo4j.py
+
 python 04_rapport_pdf.py
