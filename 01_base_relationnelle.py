@@ -1,18 +1,36 @@
 """
 01_base_relationnelle.py
-Base de données relationnelle - Système de Gestion de Bibliothèque
+Base de données relationnelle - Système de Gestion de Bibliothèque (MySQL)
 """
-import sqlite3
-import os
+import mysql.connector
 
-DB_PATH = "bibliotheque.db"
+# Configuration de la base de données MySQL
+DB_CONFIG = {
+    'host': 'localhost',
+    'user': 'root',
+    'password': 'root',
+    'database': 'bibliotheque'
+}
 
 def create_database():
-    conn = sqlite3.connect(DB_PATH)
+    # 1. Connexion au serveur MySQL pour créer la base si elle n'existe pas
+    conn = mysql.connector.connect(
+        host=DB_CONFIG['host'],
+        user=DB_CONFIG['user'],
+        password=DB_CONFIG['password']
+    )
+    cursor = conn.cursor()
+    cursor.execute(f"CREATE DATABASE IF NOT EXISTS {DB_CONFIG['database']}")
+    conn.close()
+
+    # 2. Connexion à la base de données spécifique
+    conn = mysql.connector.connect(**DB_CONFIG)
     cursor = conn.cursor()
 
     # ── Tables ──────────────────────────────────────────────────
-    cursor.executescript("""
+    schema = """
+    SET FOREIGN_KEY_CHECKS = 0;
+
     DROP TABLE IF EXISTS emprunts;
     DROP TABLE IF EXISTS exemplaires;
     DROP TABLE IF EXISTS livres;
@@ -21,58 +39,71 @@ def create_database():
     DROP TABLE IF EXISTS categories;
 
     CREATE TABLE categories (
-        id          INTEGER PRIMARY KEY AUTOINCREMENT,
-        nom         TEXT NOT NULL UNIQUE,
+        id INT AUTO_INCREMENT PRIMARY KEY,
+        nom VARCHAR(255) NOT NULL UNIQUE,
         description TEXT
     );
 
     CREATE TABLE auteurs (
-        id         INTEGER PRIMARY KEY AUTOINCREMENT,
-        nom        TEXT NOT NULL,
-        prenom     TEXT NOT NULL,
-        nationalite TEXT,
-        date_naissance TEXT
+        id INT AUTO_INCREMENT PRIMARY KEY,
+        nom VARCHAR(255) NOT NULL,
+        prenom VARCHAR(255) NOT NULL,
+        nationalite VARCHAR(255),
+        date_naissance DATE
     );
 
     CREATE TABLE livres (
-        id          INTEGER PRIMARY KEY AUTOINCREMENT,
-        titre       TEXT NOT NULL,
-        isbn        TEXT UNIQUE,
-        annee_pub   INTEGER,
-        editeur     TEXT,
-        prix        REAL,
-        auteur_id   INTEGER REFERENCES auteurs(id),
-        categorie_id INTEGER REFERENCES categories(id)
+        id INT AUTO_INCREMENT PRIMARY KEY,
+        titre VARCHAR(255) NOT NULL,
+        isbn VARCHAR(255) UNIQUE,
+        annee_pub INT,
+        editeur VARCHAR(255),
+        prix DECIMAL(10,2),
+        auteur_id INT,
+        categorie_id INT,
+        FOREIGN KEY (auteur_id) REFERENCES auteurs(id),
+        FOREIGN KEY (categorie_id) REFERENCES categories(id)
     );
 
     CREATE TABLE membres (
-        id          INTEGER PRIMARY KEY AUTOINCREMENT,
-        nom         TEXT NOT NULL,
-        prenom      TEXT NOT NULL,
-        email       TEXT UNIQUE,
-        telephone   TEXT,
-        adresse     TEXT,
-        ville       TEXT,
-        date_inscription TEXT
+        id INT AUTO_INCREMENT PRIMARY KEY,
+        nom VARCHAR(255) NOT NULL,
+        prenom VARCHAR(255) NOT NULL,
+        email VARCHAR(255) UNIQUE,
+        telephone VARCHAR(255),
+        adresse TEXT,
+        ville VARCHAR(255),
+        date_inscription DATE
     );
 
     CREATE TABLE exemplaires (
-        id          INTEGER PRIMARY KEY AUTOINCREMENT,
-        livre_id    INTEGER REFERENCES livres(id),
-        etat        TEXT CHECK(etat IN ('bon','use','endommage')),
-        disponible  INTEGER DEFAULT 1
+        id INT AUTO_INCREMENT PRIMARY KEY,
+        livre_id INT,
+        etat ENUM('bon','use','endommage'),
+        disponible INT DEFAULT 1,
+        FOREIGN KEY (livre_id) REFERENCES livres(id)
     );
 
     CREATE TABLE emprunts (
-        id              INTEGER PRIMARY KEY AUTOINCREMENT,
-        membre_id       INTEGER REFERENCES membres(id),
-        exemplaire_id   INTEGER REFERENCES exemplaires(id),
-        date_emprunt    TEXT NOT NULL,
-        date_retour_prevue TEXT NOT NULL,
-        date_retour_reelle TEXT,
-        statut          TEXT CHECK(statut IN ('en_cours','rendu','retard'))
+        id INT AUTO_INCREMENT PRIMARY KEY,
+        membre_id INT,
+        exemplaire_id INT,
+        date_emprunt DATE NOT NULL,
+        date_retour_prevue DATE NOT NULL,
+        date_retour_reelle DATE,
+        statut ENUM('en_cours','rendu','retard'),
+        FOREIGN KEY (membre_id) REFERENCES membres(id),
+        FOREIGN KEY (exemplaire_id) REFERENCES exemplaires(id)
     );
-    """)
+
+    SET FOREIGN_KEY_CHECKS = 1;
+    """
+    
+    # Exécution des requêtes de création de schéma
+    for statement in schema.split(';'):
+        statement = statement.strip()
+        if statement:
+            cursor.execute(statement)
 
     # ── Données ─────────────────────────────────────────────────
     categories = [
@@ -82,7 +113,7 @@ def create_database():
         ("Histoire",       "Histoire mondiale et locale"),
         ("Philosophie",    "Pensée critique et philosophie"),
     ]
-    cursor.executemany("INSERT INTO categories(nom,description) VALUES(?,?)", categories)
+    cursor.executemany("INSERT INTO categories(nom,description) VALUES(%s,%s)", categories)
 
     auteurs = [
         ("Knuth",      "Donald",   "Américain",  "1938-01-10"),
@@ -95,7 +126,7 @@ def create_database():
         ("Nietzsche",  "Friedrich","Allemand",   "1844-10-15"),
     ]
     cursor.executemany(
-        "INSERT INTO auteurs(nom,prenom,nationalite,date_naissance) VALUES(?,?,?,?)",
+        "INSERT INTO auteurs(nom,prenom,nationalite,date_naissance) VALUES(%s,%s,%s,%s)",
         auteurs
     )
 
@@ -112,7 +143,7 @@ def create_database():
         ("Patterns of Enterprise App Arch", "978-0-32-112521-7", 2002, "Addison-Wesley", 60.00, 6, 1),
     ]
     cursor.executemany(
-        "INSERT INTO livres(titre,isbn,annee_pub,editeur,prix,auteur_id,categorie_id) VALUES(?,?,?,?,?,?,?)",
+        "INSERT INTO livres(titre,isbn,annee_pub,editeur,prix,auteur_id,categorie_id) VALUES(%s,%s,%s,%s,%s,%s,%s)",
         livres
     )
 
@@ -127,7 +158,7 @@ def create_database():
         ("Khelifi",   "Nadia",    "n.khelifi@email.com",   "+216 71 000 008", "Avenue de l'Armée 18",   "Gabes",   "2024-01-12"),
     ]
     cursor.executemany(
-        "INSERT INTO membres(nom,prenom,email,telephone,adresse,ville,date_inscription) VALUES(?,?,?,?,?,?,?)",
+        "INSERT INTO membres(nom,prenom,email,telephone,adresse,ville,date_inscription) VALUES(%s,%s,%s,%s,%s,%s,%s)",
         membres
     )
 
@@ -139,7 +170,7 @@ def create_database():
     exemplaires[4]  = (3, "bon",  0)
     exemplaires[8]  = (5, "bon",  0)
     cursor.executemany(
-        "INSERT INTO exemplaires(livre_id,etat,disponible) VALUES(?,?,?)",
+        "INSERT INTO exemplaires(livre_id,etat,disponible) VALUES(%s,%s,%s)",
         exemplaires
     )
 
@@ -154,16 +185,16 @@ def create_database():
         (8, 8,  "2024-03-18","2024-04-01",None,          "en_cours"),
     ]
     cursor.executemany(
-        "INSERT INTO emprunts(membre_id,exemplaire_id,date_emprunt,date_retour_prevue,date_retour_reelle,statut) VALUES(?,?,?,?,?,?)",
+        "INSERT INTO emprunts(membre_id,exemplaire_id,date_emprunt,date_retour_prevue,date_retour_reelle,statut) VALUES(%s,%s,%s,%s,%s,%s)",
         emprunts
     )
 
     conn.commit()
     conn.close()
-    print("[OK] Base relationnelle SQLite créée :", DB_PATH)
+    print("[OK] Base relationnelle MySQL créée :", DB_CONFIG['database'])
 
 def show_stats():
-    conn = sqlite3.connect(DB_PATH)
+    conn = mysql.connector.connect(**DB_CONFIG)
     cur  = conn.cursor()
     for table in ["categories","auteurs","livres","membres","exemplaires","emprunts"]:
         cur.execute(f"SELECT COUNT(*) FROM {table}")

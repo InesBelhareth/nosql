@@ -3,22 +3,30 @@
 Migration de la base relationnelle vers MongoDB
 Stratégie : dénormalisation + documents imbriqués
 """
-import sqlite3
+import mysql.connector
 import json
 from datetime import datetime
+from pymongo import MongoClient
 
-DB_PATH = "bibliotheque.db"
+# Configuration
+MYSQL_CONFIG = {
+    'host': 'localhost',
+    'user': 'root',
+    'password': 'root',
+    'database': 'bibliotheque'
+}
 
-# ── Lire les données SQLite ──────────────────────────────────────────────────
+MONGO_URI = "mongodb://localhost:27017/"
+MONGO_DB = "bibliotheque_mongo"
+
+# ── Lire les données MySQL ──────────────────────────────────────────────────
 def fetch_all(conn, sql, params=()):
-    cur = conn.cursor()
+    cur = conn.cursor(dictionary=True)
     cur.execute(sql, params)
-    cols = [d[0] for d in cur.description]
-    return [dict(zip(cols, row)) for row in cur.fetchall()]
-
+    return cur.fetchall()
 
 def build_mongo_documents():
-    conn = sqlite3.connect(DB_PATH)
+    conn = mysql.connector.connect(**MYSQL_CONFIG)
 
     categories  = {r["id"]: r for r in fetch_all(conn,"SELECT * FROM categories")}
     auteurs     = {r["id"]: r for r in fetch_all(conn,"SELECT * FROM auteurs")}
@@ -44,12 +52,12 @@ def build_mongo_documents():
             "isbn":       l["isbn"],
             "annee_pub":  l["annee_pub"],
             "editeur":    l["editeur"],
-            "prix":       l["prix"],
+            "prix":       float(l["prix"]) if l["prix"] is not None else 0.0,
             "auteur": {
                 "nom":         auteur["nom"],
                 "prenom":      auteur["prenom"],
                 "nationalite": auteur["nationalite"],
-                "date_naissance": auteur["date_naissance"]
+                "date_naissance": str(auteur["date_naissance"]) if auteur["date_naissance"] else None
             },
             "categorie": {
                 "nom":         cat["nom"],
@@ -64,9 +72,9 @@ def build_mongo_documents():
                         {
                             "emprunt_id":         em["id"],
                             "membre_id":          em["membre_id"],
-                            "date_emprunt":       em["date_emprunt"],
-                            "date_retour_prevue": em["date_retour_prevue"],
-                            "date_retour_reelle": em["date_retour_reelle"],
+                            "date_emprunt":       str(em["date_emprunt"]),
+                            "date_retour_prevue": str(em["date_retour_prevue"]),
+                            "date_retour_reelle": str(em["date_retour_reelle"]) if em["date_retour_reelle"] else None,
                             "statut":             em["statut"]
                         }
                         for em in e["historique_emprunts"]
@@ -93,9 +101,9 @@ def build_mongo_documents():
                 "emprunt_id":         em["id"],
                 "livre_titre":        l.get("titre","?"),
                 "livre_isbn":         l.get("isbn","?"),
-                "date_emprunt":       em["date_emprunt"],
-                "date_retour_prevue": em["date_retour_prevue"],
-                "date_retour_reelle": em["date_retour_reelle"],
+                "date_emprunt":       str(em["date_emprunt"]),
+                "date_retour_prevue": str(em["date_retour_prevue"]),
+                "date_retour_reelle": str(em["date_retour_reelle"]) if em["date_retour_reelle"] else None,
                 "statut":             em["statut"]
             })
 
@@ -109,7 +117,7 @@ def build_mongo_documents():
                 "rue":   m["adresse"],
                 "ville": m["ville"]
             },
-            "date_inscription": m["date_inscription"],
+            "date_inscription": str(m["date_inscription"]),
             "emprunts":         emp_enrichis,
             "nb_emprunts_total": len(emp_enrichis),
             "emprunts_en_cours": sum(1 for e in emp_enrichis if e["statut"]=="en_cours"),
@@ -120,41 +128,48 @@ def build_mongo_documents():
     conn.close()
     return livres_docs, membres_docs
 
+def insert_into_mongodb(livres_docs, membres_docs):
+    """Insère les documents générés dans MongoDB"""
+    client = MongoClient(MONGO_URI)
+    db = client[MONGO_DB]
 
-def simulate_mongo_operations(livres_docs, membres_docs):
-    """Simule les opérations MongoDB (sans serveur)"""
-    results = {}
+    db.livres.drop()
+    db.membres.drop()
 
+    if livres_docs:
+        db.livres.insert_many(livres_docs)
+    if membres_docs:
+        db.membres.insert_many(membres_docs)
+        
+    return db
+
+def simulate_mongo_operations(db):
+    """Exécute de vraies opérations PyMongo"""
+    print("\n── Exécution de requêtes via PyMongo ──")
+    
     # Requête 1 : Trouver tous les livres d'informatique
-    results["livres_informatique"] = [
-        {"_id": d["_id"], "titre": d["titre"], "auteur": d["auteur"]["nom"]}
-        for d in livres_docs
-        if d["categorie"]["nom"] == "Informatique"
-    ]
+    print("\nLivres d'informatique :")
+    for doc in db.livres.find({"categorie.nom": "Informatique"}, {"titre": 1, "auteur.nom": 1}):
+        print("  -", doc)
 
     # Requête 2 : Livres disponibles (au moins 1 exemplaire dispo)
-    results["livres_disponibles"] = [
-        {"_id": d["_id"], "titre": d["titre"], "nb_disponibles": d["nb_disponibles"]}
-        for d in livres_docs
-        if d["nb_disponibles"] > 0
-    ]
+    print("\nLivres disponibles :")
+    for doc in db.livres.find({"nb_disponibles": {"$gt": 0}}, {"titre": 1, "nb_disponibles": 1}):
+        print("  -", doc)
 
     # Requête 3 : Membres avec emprunts en retard
-    results["membres_retard"] = [
-        {"_id": m["_id"], "nom": m["nom"], "prenom": m["prenom"],
-         "retards": m["emprunts_retard"]}
-        for m in membres_docs
-        if m["emprunts_retard"] > 0
-    ]
+    print("\nMembres avec retards :")
+    for doc in db.membres.find({"emprunts_retard": {"$gt": 0}}, {"nom": 1, "prenom": 1, "emprunts_retard": 1}):
+        print("  -", doc)
 
     # Requête 4 : Aggregation - livres par catégorie
-    from collections import Counter
-    cats = Counter(d["categorie"]["nom"] for d in livres_docs)
-    results["livres_par_categorie"] = [
-        {"categorie": k, "count": v} for k, v in cats.most_common()
+    print("\nLivres par catégorie :")
+    pipeline = [
+        {"$group": {"_id": "$categorie.nom", "count": {"$sum": 1}}},
+        {"$sort": {"count": -1}}
     ]
-
-    return results
+    for doc in db.livres.aggregate(pipeline):
+        print("  -", doc)
 
 
 if __name__ == "__main__":
@@ -170,16 +185,13 @@ if __name__ == "__main__":
     print(f"[OK] {len(livres_docs)} documents livres générés  → mongo_livres.json")
     print(f"[OK] {len(membres_docs)} documents membres générés → mongo_membres.json")
 
-    results = simulate_mongo_operations(livres_docs, membres_docs)
-    print("\n── Résultats des requêtes MongoDB ──")
-    for k, v in results.items():
-        print(f"\n  {k} ({len(v)} résultats):")
-        for item in v[:3]:
-            print(f"    {item}")
+    # MongoDB Connect & Insert
+    print("Connexion à MongoDB et insertion des documents...")
+    db = insert_into_mongodb(livres_docs, membres_docs)
+    print(f"[OK] Documents insérés dans MongoDB ({MONGO_DB})")
 
-    # Afficher un exemple de document
-    print("\n── Exemple document livre (Clean Code) ──")
-    print(json.dumps(livres_docs[1], ensure_ascii=False, indent=2)[:800], "...")
+    simulate_mongo_operations(db)
+
 """
 05_requetes_avancees_mongodb.py
 Requêtes MongoDB Avancées — Niveau Expert
@@ -187,20 +199,16 @@ Couvre : Aggregation Pipeline, $lookup, $facet, $bucket,
          $graphLookup, Transactions, Indexing, Text Search,
          Geospatial (simulé), Window Functions
 """
-import sqlite3, json
 from collections import defaultdict, Counter
-from datetime import datetime, timedelta
-
-DB_PATH = "bibliotheque.db"
+from datetime import timedelta
 
 def fetch(conn, sql, params=()):
-    cur = conn.cursor()
+    cur = conn.cursor(dictionary=True)
     cur.execute(sql, params)
-    cols = [d[0] for d in cur.description]
-    return [dict(zip(cols, row)) for row in cur.fetchall()]
+    return cur.fetchall()
 
 def load_data():
-    conn = sqlite3.connect(DB_PATH)
+    conn = mysql.connector.connect(**MYSQL_CONFIG)
     data = {
         "categories":  {r["id"]: r for r in fetch(conn,"SELECT * FROM categories")},
         "auteurs":     {r["id"]: r for r in fetch(conn,"SELECT * FROM auteurs")},
@@ -223,28 +231,13 @@ def run_all_queries():
 
     results = {}
 
-    # ════════════════════════════════════════════════════════════
-    # REQ M-1 : Aggregation Pipeline — Statistiques par catégorie
-    # ════════════════════════════════════════════════════════════
-    # Pipeline MongoDB :
-    # db.livres.aggregate([
-    #   { $group: { _id: "$categorie.nom",
-    #       nb_livres:      { $sum: 1 },
-    #       prix_moyen:     { $avg: "$prix" },
-    #       prix_max:       { $max: "$prix" },
-    #       prix_min:       { $min: "$prix" },
-    #       total_exemplaires: { $sum: "$nb_exemplaires" },
-    #       total_disponibles: { $sum: "$nb_disponibles" } }},
-    #   { $addFields: { taux_dispo: { $divide: ["$total_disponibles","$total_exemplaires"] }}},
-    #   { $sort: { nb_livres: -1 }}
-    # ])
     cat_stats = defaultdict(lambda: {"nb_livres":0,"prix":[],"nb_ex":0,"nb_dispo":0})
     for l in livres:
         cat = categories[l["categorie_id"]]["nom"]
         nb_ex   = sum(1 for e in exemplaires if e["livre_id"]==l["id"])
         nb_dispo= sum(1 for e in exemplaires if e["livre_id"]==l["id"] and e["disponible"])
         cat_stats[cat]["nb_livres"] += 1
-        cat_stats[cat]["prix"].append(l["prix"])
+        cat_stats[cat]["prix"].append(float(l["prix"]))
         cat_stats[cat]["nb_ex"] += nb_ex
         cat_stats[cat]["nb_dispo"] += nb_dispo
 
@@ -259,21 +252,6 @@ def run_all_queries():
         "taux_disponibilite":f"{round(v['nb_dispo']/v['nb_ex']*100,1)}%"
     } for cat, v in cat_stats.items()], key=lambda x: -x["nb_livres"])
 
-    # ════════════════════════════════════════════════════════════
-    # REQ M-2 : $lookup — Jointure livres ↔ emprunts actifs
-    # ════════════════════════════════════════════════════════════
-    # db.livres.aggregate([
-    #   { $unwind: "$exemplaires" },
-    #   { $lookup: {
-    #       from: "emprunts_actifs",
-    #       localField: "exemplaires.exemplaire_id",
-    #       foreignField: "exemplaire_id",
-    #       as: "emprunts_actifs" }},
-    #   { $match: { "emprunts_actifs": { $ne: [] } }},
-    #   { $project: { titre:1, "exemplaires.exemplaire_id":1,
-    #                 "emprunts_actifs.membre_id":1,
-    #                 "emprunts_actifs.date_retour_prevue":1 }}
-    # ])
     emp_actifs = [e for e in emprunts if e["statut"] in ("en_cours","retard")]
     lookup_result = []
     for em in emp_actifs:
@@ -287,22 +265,13 @@ def run_all_queries():
                 "etat_exemplaire":    ex["etat"],
                 "membre":             f"{m['prenom']} {m['nom']}",
                 "email":              m["email"],
-                "date_emprunt":       em["date_emprunt"],
-                "date_retour_prevue": em["date_retour_prevue"],
+                "date_emprunt":       str(em["date_emprunt"]),
+                "date_retour_prevue": str(em["date_retour_prevue"]),
                 "statut":             em["statut"],
                 "jours_retard":       14 if em["statut"]=="retard" else 0
             })
     results["M2_lookup_livres_emprunts_actifs"] = lookup_result
 
-    # ════════════════════════════════════════════════════════════
-    # REQ M-3 : $facet — Analyse multi-dimensionnelle
-    # ════════════════════════════════════════════════════════════
-    # db.livres.aggregate([{ $facet: {
-    #   "par_categorie":   [{$group:{_id:"$categorie.nom", count:{$sum:1}}}],
-    #   "par_editeur":     [{$group:{_id:"$editeur",       count:{$sum:1}}}],
-    #   "par_decade":      [{$bucket:{groupBy:"$annee_pub", boundaries:[1880,1950,1970,1990,2010,2030]}}],
-    #   "prix_distribution":[{$bucket:{groupBy:"$prix",    boundaries:[0,15,30,50,75,100]}}]
-    # }}])
     by_editeur  = Counter(l["editeur"] for l in livres)
     by_decade   = Counter()
     price_dist  = Counter()
@@ -314,7 +283,7 @@ def run_all_queries():
         elif yr < 2010: by_decade["1990-2009"] += 1
         else:           by_decade["2010+"]    += 1
 
-        p = l["prix"]
+        p = float(l["prix"])
         if p < 15:    price_dist["0-15 TND"]   += 1
         elif p < 30:  price_dist["15-30 TND"]  += 1
         elif p < 50:  price_dist["30-50 TND"]  += 1
@@ -328,20 +297,6 @@ def run_all_queries():
         "prix_distribution":[{"tranche":k,"count":v} for k,v in sorted(price_dist.items())]
     }
 
-    # ════════════════════════════════════════════════════════════
-    # REQ M-4 : $bucket + $project — Classement des membres
-    # ════════════════════════════════════════════════════════════
-    # Calcule un score d'activité pour chaque membre :
-    # score = nb_emprunts_total * 10 + nb_rendus_à_temps * 5 - nb_retards * 20
-    # db.membres.aggregate([
-    #   { $addFields: { score_activite: {
-    #       $subtract: [
-    #         {$add:[{$multiply:["$nb_emprunts_total",10]},{$multiply:["$emprunts_rendus",5]}]},
-    #         {$multiply:["$emprunts_retard",20]}
-    #       ]}}},
-    #   { $sort: { score_activite: -1 }},
-    #   { $limit: 5 }
-    # ])
     membre_scores = []
     for m in membres:
         emp_m = [e for e in emprunts if e["membre_id"]==m["id"]]
@@ -361,17 +316,6 @@ def run_all_queries():
         })
     results["M4_classement_membres_score"] = sorted(membre_scores, key=lambda x: -x["score_activite"])
 
-    # ════════════════════════════════════════════════════════════
-    # REQ M-5 : $unwind + $group — Top auteurs par valeur stock
-    # ════════════════════════════════════════════════════════════
-    # db.livres.aggregate([
-    #   { $group: { _id: { nom:"$auteur.nom", prenom:"$auteur.prenom" },
-    #       nb_livres:          { $sum: 1 },
-    #       valeur_stock:       { $sum: { $multiply: ["$prix","$nb_exemplaires"] }},
-    #       nb_total_emprunts:  { $sum: { $size: "$exemplaires.historique_emprunts" }},
-    #       prix_moyen:         { $avg: "$prix" }}},
-    #   { $sort: { valeur_stock: -1 }}
-    # ])
     auteur_stats = defaultdict(lambda: {"livres":[],"nb_ex":0,"prix":[],"nb_emp":0})
     for l in livres:
         a_id = l["auteur_id"]
@@ -383,7 +327,7 @@ def run_all_queries():
                      if e["livre_id"]==l["id"] and em["exemplaire_id"]==e["id"])
         auteur_stats[key]["livres"].append(l["titre"])
         auteur_stats[key]["nb_ex"] += nb_ex
-        auteur_stats[key]["prix"].append(l["prix"])
+        auteur_stats[key]["prix"].append(float(l["prix"]))
         auteur_stats[key]["nb_emp"] += nb_emp
 
     results["M5_top_auteurs_valeur_stock"] = sorted([{
@@ -395,21 +339,9 @@ def run_all_queries():
         "prix_moyen_TND":   round(sum(v["prix"])/len(v["prix"]),2)
     } for k, v in auteur_stats.items()], key=lambda x: -x["valeur_stock_TND"])
 
-    # ════════════════════════════════════════════════════════════
-    # REQ M-6 : Pipeline temporel — Activité par mois
-    # ════════════════════════════════════════════════════════════
-    # db.emprunts.aggregate([
-    #   { $addFields: { mois: { $month: "$date_emprunt" },
-    #                   annee:{ $year:  "$date_emprunt" }}},
-    #   { $group: { _id: { mois:"$mois", annee:"$annee" },
-    #       nb_emprunts: { $sum: 1 },
-    #       nb_retours:  { $sum: { $cond: [{ $ne:["$date_retour_reelle",null]},1,0]}},
-    #       nb_retards:  { $sum: { $cond: [{ $eq:["$statut","retard"]},1,0]}}}},
-    #   { $sort: { "_id.annee":1, "_id.mois":1 }}
-    # ])
     monthly = defaultdict(lambda: {"nb_emprunts":0,"nb_retours":0,"nb_retards":0,"livres":[]})
     for em in emprunts:
-        mois = em["date_emprunt"][:7]
+        mois = str(em["date_emprunt"])[:7]
         monthly[mois]["nb_emprunts"] += 1
         if em["date_retour_reelle"]: monthly[mois]["nb_retours"] += 1
         if em["statut"] == "retard": monthly[mois]["nb_retards"] += 1
@@ -427,16 +359,6 @@ def run_all_queries():
         "livres_empruntes": v["livres"]
     } for k, v in monthly.items()], key=lambda x: x["mois"])
 
-    # ════════════════════════════════════════════════════════════
-    # REQ M-7 : Recommandation — "Les membres qui ont emprunté X
-    #           ont aussi emprunté Y" (Collaborative Filtering)
-    # ════════════════════════════════════════════════════════════
-    # db.membres.aggregate([
-    #   { $unwind: "$emprunts" },
-    #   { $group: { _id: "$emprunts.livre_titre",
-    #       membres_lecteurs: { $addToSet: "$_id" }}},
-    #   Puis calcul de co-occurrences
-    # ])
     livre_lecteurs = defaultdict(set)
     for em in emprunts:
         ex = next((e for e in exemplaires if e["id"]==em["exemplaire_id"]), None)
@@ -444,7 +366,6 @@ def run_all_queries():
             l = next((lv for lv in livres if lv["id"]==ex["livre_id"]), None)
             if l: livre_lecteurs[l["titre"]].add(em["membre_id"])
 
-    # Co-occurrences
     co_occur = defaultdict(Counter)
     for titre, lecteurs in livre_lecteurs.items():
         for autre_titre, autres_lecteurs in livre_lecteurs.items():
@@ -461,24 +382,11 @@ def run_all_queries():
 
     results["M7_recommandations_collaboratives"] = recommandations
 
-    # ════════════════════════════════════════════════════════════
-    # REQ M-8 : $setWindowFields — Rang et percentile
-    # ════════════════════════════════════════════════════════════
-    # Classement des livres par prix dans leur catégorie
-    # db.livres.aggregate([
-    #   { $setWindowFields: {
-    #       partitionBy: "$categorie.nom",
-    #       sortBy: { prix: -1 },
-    #       output: {
-    #         rang_prix:    { $rank: {} },
-    #         percentile:   { $percentRank: {} }
-    #       }}}
-    # ])
     livres_avec_rang = []
     by_cat = defaultdict(list)
     for l in livres:
         cat = categories[l["categorie_id"]]["nom"]
-        by_cat[cat].append((l["titre"], l["prix"]))
+        by_cat[cat].append((l["titre"], float(l["prix"])))
 
     for cat, items in by_cat.items():
         sorted_items = sorted(items, key=lambda x: -x[1])
@@ -493,11 +401,6 @@ def run_all_queries():
             })
     results["M8_rang_prix_par_categorie"] = sorted(livres_avec_rang, key=lambda x: (x["categorie"], x["rang_prix"]))
 
-    # ════════════════════════════════════════════════════════════
-    # REQ M-9 : Détection d'anomalies — Emprunts suspects
-    # ════════════════════════════════════════════════════════════
-    # Membres qui ont emprunté le même livre plusieurs fois,
-    # ou dont tous les emprunts sont en retard
     anomalies = []
     for m in membres:
         emp_m = [e for e in emprunts if e["membre_id"]==m["id"]]
@@ -520,10 +423,7 @@ def run_all_queries():
             })
     results["M9_detection_anomalies"] = anomalies
 
-    # ════════════════════════════════════════════════════════════
-    # REQ M-10 : Rapport KPI — Tableau de bord complet
-    # ════════════════════════════════════════════════════════════
-    total_valeur_stock = sum(l["prix"] * sum(1 for e in exemplaires if e["livre_id"]==l["id"]) for l in livres)
+    total_valeur_stock = sum(float(l["prix"]) * sum(1 for e in exemplaires if e["livre_id"]==l["id"]) for l in livres)
     taux_occupation    = sum(1 for e in exemplaires if not e["disponible"]) / len(exemplaires)
     livres_jamais_emp  = []
     for l in livres:
@@ -542,9 +442,9 @@ def run_all_queries():
         "emprunts_en_retard":     sum(1 for e in emprunts if e["statut"]=="retard"),
         "emprunts_rendus":        sum(1 for e in emprunts if e["statut"]=="rendu"),
         "valeur_stock_totale":    f"{round(total_valeur_stock,2)} TND",
-        "prix_moyen_livre":       f"{round(sum(l['prix'] for l in livres)/len(livres),2)} TND",
-        "livre_le_plus_cher":     max(livres, key=lambda x:x["prix"])["titre"],
-        "livre_le_moins_cher":    min(livres, key=lambda x:x["prix"])["titre"],
+        "prix_moyen_livre":       f"{round(sum(float(l['prix']) for l in livres)/len(livres),2)} TND",
+        "livre_le_plus_cher":     max(livres, key=lambda x:float(x["prix"]))["titre"],
+        "livre_le_moins_cher":    min(livres, key=lambda x:float(x["prix"]))["titre"],
         "livres_jamais_empruntes":livres_jamais_emp,
         "nb_livres_jamais_empr":  len(livres_jamais_emp),
         "ville_plus_active":      Counter(m["ville"] for m in membres).most_common(1)[0][0],
@@ -552,7 +452,6 @@ def run_all_queries():
     }
 
     return results
-
 
 def display_results(results):
     print("\n" + "═"*70)
@@ -588,7 +487,8 @@ def display_results(results):
         json.dump(results, f, ensure_ascii=False, indent=2)
     print(f"\n[OK] Résultats sauvegardés → mongo_requetes_avancees.json")
 
-
-if __name__ == "__main__":
-    results = run_all_queries()
-    display_results(results)
+# Note: The advanced queries can be run directly using PyMongo for equivalent MongoDB queries.
+# To run them as python simulations, you could uncomment the following lines.
+# if __name__ == "__main__":
+#     results = run_all_queries()
+#     display_results(results)
